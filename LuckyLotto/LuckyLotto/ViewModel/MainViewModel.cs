@@ -25,11 +25,16 @@ namespace LuckyLotto.ViewModel
             DrawLuckyNumbers();
         }
 
+        private bool CanDraw()
+        {
+            return Numbers > 0;
+        }
+
         private void DrawLuckyNumbers()
         {
             LuckyBalls = new ObservableCollection<LuckyBall>();
 
-            for (int i = 0; i < Numbers; i++)
+            for (var i = 0; i < Numbers; i++)
             {
                 LuckyBalls.Add(new LuckyBall() { Number = _random.Next(0, 99), Color = new SolidColorBrush() { Color = _random.NextColor() } });
             }
@@ -44,7 +49,11 @@ namespace LuckyLotto.ViewModel
                 return _numbers;
             }
 
-            set { Set(ref _numbers, value); }
+            set
+            {
+                Set(ref _numbers, value);
+                GenerateCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public ObservableCollection<LuckyBall> LuckyBalls
@@ -62,7 +71,7 @@ namespace LuckyLotto.ViewModel
             get
             {
                 if (_generateCommand == null)
-                    _generateCommand = new DelegateCommand(DrawLuckyNumbers);
+                    _generateCommand = new DelegateCommand(DrawLuckyNumbers, CanDraw);
                 return _generateCommand;
             }
 
