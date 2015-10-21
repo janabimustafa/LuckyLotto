@@ -18,6 +18,7 @@ namespace LuckyLotto.ViewModel
         private ObservableCollection<LuckyBall> _luckyBalls;
         private DelegateCommand _generateCommand;
         private Random _random;
+        private bool _isBusy;
 
         public MainViewModel()
         {
@@ -30,14 +31,25 @@ namespace LuckyLotto.ViewModel
             return Numbers > 0;
         }
 
-        private void DrawLuckyNumbers()
+        private async Task<ObservableCollection<LuckyBall>> GenerateListAsync()
         {
-            LuckyBalls = new ObservableCollection<LuckyBall>();
-
-            for (var i = 0; i < Numbers; i++)
+            var list = await Task<List<LuckyBall>>.Factory.StartNew(() =>
             {
-                LuckyBalls.Add(new LuckyBall() { Number = _random.Next(0, 99), Color = new SolidColorBrush() { Color = _random.NextColor() } });
-            }
+                var luckyList = new List<LuckyBall>();
+                for (var i = 0; i < Numbers; i++)
+                {
+                    luckyList.Add(new LuckyBall() { Number = _random.Next(0, 99), Color = _random.NextColor() });
+                }
+                return luckyList;
+            });
+            return new ObservableCollection<LuckyBall>(list);
+        }
+
+        private async void DrawLuckyNumbers()
+        {
+            IsBusy = true;
+            LuckyBalls = await GenerateListAsync();
+            IsBusy = false;
         }
 
         public int Numbers
@@ -78,5 +90,17 @@ namespace LuckyLotto.ViewModel
             set { Set(ref _generateCommand, value); }
         }
 
+        public bool IsBusy
+        {
+            get
+            {
+                return _isBusy;
+            }
+
+            set
+            {
+                Set(ref _isBusy, value);
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace LuckyLotto.Model
     public class LuckyBall
     {
         public int Number { get; set; }
-        public SolidColorBrush Color { get; set; }
+        public Color Color { get; set; }
+        public SolidColorBrush BackgroundBrush => new SolidColorBrush(Color);
     }
 }

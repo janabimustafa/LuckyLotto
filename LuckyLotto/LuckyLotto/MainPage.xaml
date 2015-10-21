@@ -20,12 +20,13 @@
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Ellipse Width="75" Height="75" Fill="{Binding Color}"></Ellipse>
+                        <Ellipse Width="75" Height="75" Fill="{Binding BackgroundBrush}"></Ellipse>
                         <TextBlock Text="{Binding Number}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"></TextBlock>
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
+        <ProgressRing IsActive="{Binding IsBusy}" Width="100" Height="100"></ProgressRing>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
